@@ -1,0 +1,1 @@
+from contabilitatea import pierderi

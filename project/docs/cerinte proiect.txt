@@ -1,0 +1,42 @@
+In ultima vreme agentia intampina mai multe probleme cand vine vorba de vanzare.
+Anumite apartamente sunt vandute de 2 ori, ceea ce duce la o reclama negativa.
+O imbunatatire trebuie adusa care sa se asigure ca un agent cu acces la terminal (sistemul curent) nu vinde un apartament blocat.
+
+In schimb, agentia o observat o oportuniate de business.
+Cand un apartament este vandut la 2 clienti, unii tind sa dea cu pana la 15k mai mult ca sa obtina apartamentul.
+Ce is doreste agentia:
+
+- implementarea unor agenti falsi care:
+    - blocheaza apartamente pentru vanzare
+
+- un sistem de negociere intre un cumparator fals si unul real
+    - cel care da cel mai mult primeste apartamentul
+
+- acest sistem este activ doar pt apartamente de la +80k EUR
+
+Pe langa implementare, o diagrama a solutiei este necesara.
+Aceasta diagrama trebuie tinuta la curent cu implementarea actuala
+
+Proiectul are urmatoarele cerinte minime:
+(Threads & Diagrams)
+- diagrama UML a proiectului
+- o implementare de paralelism:
+    - Threads
+    - Daemon threads
+    - Process
+
+
+O comisie de evaluare a fost programata sa vina sa evalueze sistemul agentiei.
+Comisia a trimis o serie de verificari care vor fi facute.
+
+Desi sistemul prezent indeplineste majoritatea cerintelor, o modernizare nu ar strica.
+
+Proiectul are urmatoarele cerinte minime:
+- implementarea claselor de model cu pydantic
+- teste care acopera functionalitatile principale ale sistemului.
+    - teste care verifica happy path-ul (ceea ce ar trebui sa se intample)
+    - teste care verifica corner cases (cazuri exceptionale)
+    - teste care verifica exceptions (cazuri care duc sau ar trebui sa duca la erori)
+
+- includerea de type-hinting
+- standardizare folosind un linter
