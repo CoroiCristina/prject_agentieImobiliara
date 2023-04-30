@@ -1,7 +1,7 @@
 from UI.utility import (meniu,
                         citire_fisier,
                         creareOferta)
-
+print("MODIFICAT")
 
 if __name__ == "__main__":
     print("hello!")
