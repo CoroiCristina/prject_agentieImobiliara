@@ -1,6 +1,18 @@
 from datetime import date
 from module.oferta.extra_optiuni import alegere_extraOP
 from .Bot import negociere
+from sqlalchemy import Column, Integer, String
+from sqlalchemy.ext.declarative import declarative_base
+
+Base = declarative_base()
+
+class Vanzare(Base):
+    __tablename__ = 'vanzare'
+
+    nr_contract = Column(Integer, primary_key=True)
+    data = Column(date)
+    suma = Column(int)
+    cod_v = Column(int)
 
 
 class vanzare:

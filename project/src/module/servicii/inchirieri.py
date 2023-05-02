@@ -1,16 +1,19 @@
 from datetime import datetime
+from sqlalchemy import Column, Integer, String
+from sqlalchemy.ext.declarative import declarative_base
 
+Base = declarative_base()
 
-class inchiriere:
-    def __init__(self, data_intrare: str, data_iesire: str, apartament: int, nr_persoane: int) -> None:
-        self.data_intrare = data_intrare
-        self.data_iesire = data_iesire
-        self.data_aux = data_intrare
-        self.apartament = apartament
-        self.nr_persoane = nr_persoane
-        self.pret_luna = self.stabilirePret_luna()
-        self.perioada = self.perioada_de_timp(data_intrare, data_iesire)
-        self.bani_incasati = self.incasare_chirie()
+class Inchiriere(Base):
+    __tablename__ = 'inchiriere'
+
+    cod_in = Column(Integer, primary_key=True, autoincrement="auto")
+    nr_contract = Column(int)
+    data_intrare = Column(datetime)
+    data_iesire = Column(datetime)
+    nr_persoane = Column(int)
+    suma_chirie = Column(int)
+    nr_plati_ramase = Column(int)
 
     def __str__(self) -> str:
         return (f"{self.data_intrare},{self.data_iesire},{self.apartament},{self.nr_persoane}")
@@ -90,6 +93,6 @@ def Inchiriere(lista_apartamente, lista_inchirieri):
 
 
 def inregistrareInchiriere( lista_inchirieri, apartament, nr_persoane, data_intrare, data_iesire):
-    lista_inchirieri.append(inchiriere(data_intrare, data_iesire, apartament.id_cod, nr_persoane))
+    lista_inchirieri.append(Inchiriere(data_intrare, data_iesire, apartament.id_ap, nr_persoane))
     apartament.status = "Inchiriat"
     print("Date inregistrate cu succes!")

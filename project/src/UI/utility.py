@@ -1,5 +1,6 @@
 import json
 import threading
+import random
 from module.oferta.tipApartament import (Garsoniera,
                                          Apartament2Camere,
                                          Apartament3Camere,
@@ -13,9 +14,13 @@ from module.servicii.contabilitatea import (pierderi,
                                             Vizualizare_Profit,
                                             Vizualizare_ComplexNou)
 from module.servicii.thread import myThread
+from module.oferta.complex import Complex
+from module.oferta.apartamente import Apartament, angajat_fals
+from module.oferta.extra_optiuni import extra_optiune
 
 
-def creareOferta(lista_apartamente: list) -> None:
+def creareOferta(lista_complexe: list, lista_extraOp: list) -> None:
+    lista_apartamente = []
     try:
         nr_complexe = int(input("Cate complexe doriti sa inregistrati?"))
     except Exception:
@@ -33,16 +38,33 @@ def creareOferta(lista_apartamente: list) -> None:
             print("Nu ati introdus un tip de data valida! Mai introduceti odata")
             strada = input("Pe ce strada este situat complexul "+str(comp+1)+"?")
         nr_blocuri = 3
+        id_Complex = len(lista_complexe)
+        lista_complexe.append(Complex(id_Complex, denumire, strada, nr_blocuri, lista_ap=[]))
         for bloc in range(nr_blocuri):
             for etaj in range(11):
                 if etaj < 10:
                     for i in range(4):
-                        lista_apartamente.append(Garsoniera(len(lista_apartamente)+1, denumire, strada, bloc+1, etaj, etaj*100+i+1, "free"))
-                        lista_apartamente.append(Apartament2Camere(len(lista_apartamente)+1, denumire, strada, bloc+1, etaj, etaj*100+i+5, "free"))
-                        lista_apartamente.append(Apartament3Camere(len(lista_apartamente)+1, denumire, strada, bloc+1, etaj, etaj*100+i+9, "free"))
-                    else:
-                        for i in range(2):
-                            lista_apartamente.append(Penthouse(len(lista_apartamente)+1, denumire, strada, bloc+1, etaj, etaj*100+i+1, "free"))
+                        lista_apartamente.append(Apartament(id_ap=len(lista_apartamente)+1, id_complex=id_Complex, nr_bloc=bloc+1, nr_etaj=etaj, nr_ap=etaj*100+i+1,
+                                                            tip_ap="Garsoniera", dimensiune=random.randint(20, 25), bloc_vanzare=angajat_fals(bloc+1), status="free"))
+                        lista_apartamente.append(Apartament(id_ap=len(lista_apartamente)+1, id_complex=id_Complex, nr_bloc=bloc+1, nr_etaj=etaj, nr_ap=etaj*100+i+5,
+                                                            tip_ap="Apartament cu 2 camere", dimensiune=random.randint(40, 60), bloc_vanzare=angajat_fals(bloc+1), status="free"))
+                        lista_apartamente.append(Apartament(id_ap=len(lista_apartamente)+1, id_complex=id_Complex, nr_bloc=bloc+1, nr_etaj=etaj, nr_ap=etaj*100+i+9,
+                                                            tip_ap="Aparatamente cu 3 camere", dimensiune=random.randint(70, 90), bloc_vanzare=angajat_fals(bloc+1), status="free"))
+                else:
+                    for i in range(2):
+                        lista_apartamente.append(Apartament(id_ap=len(lista_apartamente)+1, id_complex=id_Complex, nr_bloc=bloc+1, nr_etaj=etaj, nr_ap=etaj*100+i+1,
+                                                            tip_ap="Penthouse", dimensiune=random.randint(100, 150), bloc_vanzare=angajat_fals(bloc+1), status="free"))
+        lista_complexe[-1].lista_ap = lista_apartamente
+        lista_apartamente.clear()
+    print("Ar trebui sa inserati si extra optiunile de care dispuneti!")
+    print("Atentie!!! Trebuie sa introduceti si o extra optiune si pentru cazul in care clientul nu ar dori niciuna! Ex. [denumire: fara extra op., pret: 0]")
+    nr_op = int(input("Cate extra optiuni doriti sa inserati?"))
+    for i in range(nr_op):
+        denumire = input(f"Dati denumirea pentru optiunea cu nr. {i+1}:")
+        pret = int(input("Care va fi pretul acestei optiuni:"))
+        lista_extraOp.append(extra_optiune(i+1, denumire, pret))
+
+
 
 
 def decoratorScriereFisier(functie):
