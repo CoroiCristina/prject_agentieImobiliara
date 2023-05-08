@@ -12,7 +12,7 @@ def negociere(pret_apartament: int, apartament: object) -> int:
     print("Începerea negocierii între client1 și client2...")
     # Ocuparea obiectului Lock pentru a evita conflictul între thread-uri
     with lock:
-        print(f"client1: Am solicitat primul sa cumpar apartamentul {apartament.nr_apartament}!")
+        print(f"client1: Am solicitat primul sa cumpar apartamentul {apartament.nr_ap}!")
         dorinta_client1 = 100
         dorinta_client2 = 100
         suma_negociata1 = 1

@@ -1,6 +1,7 @@
 import threading
 from datetime import datetime, timedelta
-from .contabilitatea import pierderi
+from .contabilitatea import Inregistrare_contBancar
+from module.oferta.apartamente import Apartament
 
 
 def ultima_zi_lucratoare():
@@ -21,32 +22,54 @@ def ultima_zi_lucratoare():
 lock = threading.Lock()
 
 
-def myThread(lista_apartamente, lista_vanzari, lista_inchiriei, lista_pierderi):
+def myThread(*lista):
     with lock:
-        for ap in lista_apartamente:
+        for ap in lista[1]:
             contor = 0
-            if ap.status != "free":
-                for v in lista_vanzari:
-                    if v.apartament == ap.id_cod:
-                        contor = 1
-                if contor == 0:
-                    for i in lista_inchiriei:
-                        if i.apartament == ap.id_cod:
-                            contor = 1
-                    if contor == 0:
-                        ap.status == "free"
-        for i in lista_inchiriei:
+            ok = 0
+            if ap.statut != "free":
+                for c in lista[5]:
+                    if c.id_ap == ap.id_ap:
+                        for v in lista[2]:
+                            if v.nr_contract == c.nr_contract:
+                                ok = 0
+                                for inr in lista[6]:
+                                    if inr.detalii == f"Vanzare apartament{ap.id_ap}":
+                                        ok = 1
+                                if ok != 1:
+                                    lista[6].append(Inregistrare_contBancar(cod_inregistrare=len(lista[6])+1, data=str(datetime.today()), suma=v.suma, detalii=f"Vanzare apartament{ap.id_ap}"))
+                                    lista[7].inserare_DB(lista[6][-1])
+                                contor = 1
+                        if contor == 0:
+                            for i in lista[3]:
+                                if i.nr_contract == c.nr_contract:
+                                    ok = 0
+                                    for inr in lista[6]:
+                                        print(inr)
+                                        if inr.detalii == f"Inchiriere apartament{ap.id_ap}":
+                                            ok = 1
+                                    if ok != 1 and int(i.zi_plata) == int(datetime.today().day()) and datetime.strptime(i.data_iesire, '%Y-%m-%d') <= datetime.today():
+                                        lista[6].append(Inregistrare_contBancar(cod_inregistrare=len(lista[6])+1, data=str(datetime.today()), suma=i.suma_chirie, detalii=f"Inchiriere apartament{ap.id_ap}"))
+                                        lista[7].inserare_DB(lista[6][-1])
+                                        contor = 1
+                            if contor == 0:
+                                lista[5].remove(c)
+                                lista[7].DeleteDB(c.nr_contract)
+                                ap.statut == "free"
+                                lista[7].update_ApartamentDB(Apartament, ap.id_ap, ap.statut)
+        for i in lista[3]:
             if datetime.strptime(i.data_iesire, '%Y-%m-%d') <= datetime.today():
-                for ap in lista_apartamente:
-                    if i.apartament == ap.id_cod:
-                        ap.status == "free"
+                for ap in lista[1]:
+                    if i.id_ap == ap.id_ap:
+                        ap.statut == "free"
         contor = 0
-        for p in lista_pierderi:
+        for p in lista[6]:
             if p.data == str(datetime.today().date()):
                 contor = 1
         if ultima_zi_lucratoare() and contor != 1:
             contor = 0
-            for ap in lista_apartamente:
-                if ap.status == "free":
+            for ap in lista[1]:
+                if ap.statut == "free":
                     contor += 1
-            lista_pierderi.append(pierderi(data=str(datetime.today().date()), suma=contor*150/5))
+            lista[6].append(Inregistrare_contBancar(cod_inregistrare=len(lista[6])+1), data=str(datetime.today()), suma=-contor*150, detelii="Pierderi Administrative")
+            lista[7].inserare_DB(lista[6][-1])
