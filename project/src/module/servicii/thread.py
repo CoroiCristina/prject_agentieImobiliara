@@ -23,12 +23,13 @@ lock = threading.Lock()
 
 
 def myThread(*lista):
+    print(len(lista[5]))
     with lock:
-        for ap in lista[1]:
+        for c in lista[5]:
             contor = 0
             ok = 0
-            if ap.statut != "free":
-                for c in lista[5]:
+            for ap in lista[1]:
+                if ap.statut != "free":
                     if c.id_ap == ap.id_ap:
                         for v in lista[2]:
                             if v.nr_contract == c.nr_contract:
@@ -39,24 +40,23 @@ def myThread(*lista):
                                 if ok != 1:
                                     lista[6].append(Inregistrare_contBancar(cod_inregistrare=len(lista[6])+1, data=str(datetime.today()), suma=v.suma, detalii=f"Vanzare apartament{ap.id_ap}"))
                                     lista[7].inserare_DB(lista[6][-1])
-                                contor = 1
+                                    contor = 1
                         if contor == 0:
                             for i in lista[3]:
                                 if i.nr_contract == c.nr_contract:
                                     ok = 0
                                     for inr in lista[6]:
-                                        print(inr)
                                         if inr.detalii == f"Inchiriere apartament{ap.id_ap}":
                                             ok = 1
                                     if ok != 1 and int(i.zi_plata) == int(datetime.today().day()) and datetime.strptime(i.data_iesire, '%Y-%m-%d') <= datetime.today():
                                         lista[6].append(Inregistrare_contBancar(cod_inregistrare=len(lista[6])+1, data=str(datetime.today()), suma=i.suma_chirie, detalii=f"Inchiriere apartament{ap.id_ap}"))
                                         lista[7].inserare_DB(lista[6][-1])
                                         contor = 1
-                            if contor == 0:
-                                lista[5].remove(c)
-                                lista[7].DeleteDB(c.nr_contract)
-                                ap.statut == "free"
-                                lista[7].update_ApartamentDB(Apartament, ap.id_ap, ap.statut)
+            if contor == 0:
+                lista[5].remove(c)
+                lista[7].DeleteDB(c.nr_contract)
+                ap.statut == "free"
+                lista[7].update_ApartamentDB(Apartament, ap.id_ap, ap.statut)
         for i in lista[3]:
             if datetime.strptime(i.data_iesire, '%Y-%m-%d') <= datetime.today():
                 for ap in lista[1]:

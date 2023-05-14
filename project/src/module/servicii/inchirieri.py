@@ -19,7 +19,7 @@ class Inchiriere(Base):
     data_intrare = Column(String(10))
     data_iesire = Column(String(10))
     nr_persoane = Column(Integer)
-    suma_chirie = Column(Integer)
+    suma_chirie = Column(Integer) #pe luna
     nr_plati_ramase = Column(Integer)
     zi_plata = Column(String(2))
 
