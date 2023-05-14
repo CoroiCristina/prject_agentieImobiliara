@@ -91,7 +91,7 @@ class StorageObject(ABC):
     #     raise NotImplementedError("Functia get_inregistrari_cont_bancar neimplementata")
 
 class Singleton(object):
-    
+
     def __new__(cls):
         if not hasattr(cls, 'instance'):
             cls.instance = super(Singleton, cls).__new__(cls)

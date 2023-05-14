@@ -28,7 +28,7 @@ def Singleton(cls):
 @Singleton
 class DBAccess(StorageObject):
     # specificarea datelor de conectare la baza de date MySQL
-    db_host = '0.0.0.0'
+    db_host = '127.0.0.1'
     db_name = 'agentiebd'
     db_user = 'root'
     db_pass = ''
