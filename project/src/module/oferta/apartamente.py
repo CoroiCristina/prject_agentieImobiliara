@@ -1,18 +1,30 @@
-class apartament:
-    def __init__(self, id_cod: int, denumire_complex: str, strada: str, bloc: int, etaj: int, nr_apartament: int, status: str = "free") -> None:
-        self.id_cod = id_cod
-        self.denumire_complex = denumire_complex
-        self.strada = strada
-        self.bloc = bloc
-        self.etaj = etaj
-        self.nr_apartament = nr_apartament
-        self.status = status
-        self.blok_vanzare = self.angajat_fals()
+from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.ext.declarative import declarative_base
 
-    def angajat_fals(self) -> int:
-        global bloc_vanzare
-        if self.bloc != 1:
-            bloc_vanzare = 0
-        else:
-            bloc_vanzare = 1
-        return bloc_vanzare
+Base = declarative_base()
+
+
+class Apartament(Base):
+    __tablename__ = 'apartament'
+
+    id_ap = Column(Integer, primary_key=True)
+    id_complex = Column(Integer)
+    nr_bloc = Column(Integer)
+    nr_etaj = Column(Integer)
+    nr_ap = Column(Integer)
+    tip_ap = Column(String(30))
+    dimensiune = Column(Integer)
+    bloc_vanzare = Column(Integer)
+    statut = Column(String(10))
+    def __str__(self) -> str:
+        return (f"id_ap: {self.id_ap}, id_complex: {self.id_complex}, nr_bloc: {self.nr_bloc}, nr_etaj: {self.nr_etaj}, nr_ap: {self.nr_ap}, tip_ap: {self.tip_ap}, dimensiune: {self.dimensiune}")
+
+
+
+def angajat_fals(nr_bloc: int) -> int:
+    global bloc_vanzare
+    if nr_bloc != 1:
+        bloc_vanzare = 0
+    else:
+        bloc_vanzare = 1
+    return bloc_vanzare

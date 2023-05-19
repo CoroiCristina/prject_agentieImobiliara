@@ -1,38 +1,44 @@
-from pydantic import BaseModel
+from datetime import date
+from sqlalchemy import Column, String, Integer
+from sqlalchemy.ext.declarative import declarative_base
+
+Base = declarative_base()
 
 
-class pierderi(BaseModel):
-    data: str
-    suma: float
+class Inregistrare_contBancar(Base):
+    __tablename__ = 'cont_bancar'
+
+    cod_inregistrare = Column(Integer, primary_key=True)
+    data = Column(String(10))
+    suma = Column(Integer)
+    detalii = Column(String(50))
+
+# def venit_vanzari(lista_vanzari: list, lista_contracte: list) -> int:
+#     suma_v = 0
+#     for v in lista_vanzari:
+#         suma_v += v.suma_incasata
+#     return suma_v
 
 
-def venit_vanzari(lista_vanzari: list) -> int:
-    suma_v = 0
-    for v in lista_vanzari:
-        suma_v += v.suma_incasata
-    return suma_v
+# def venit_inchirieri(lista_inchirieri: list) -> int:
+#     suma_i = 0
+#     for i in lista_inchirieri:
+#         suma_i += i.bani_incasati
+#     return suma_i
 
 
-def venit_inchirieri(lista_inchirieri: list) -> int:
-    suma_i = 0
-    for i in lista_inchirieri:
-        suma_i += i.bani_incasati
-    return suma_i
+# def pierderi_administratie(lista_pierderi: list) -> int:
+#     suma_p = 0
+#     for p in lista_pierderi:
+#         suma_p += p.suma
+#     return suma_p
 
 
-def pierderi_administratie(lista_pierderi: list) -> int:
-    suma_p = 0
-    for p in lista_pierderi:
-        suma_p += p.suma
-    return suma_p
-
-
-def calcul_sumaCurentaInCont(lista_vanzari: list, lista_inchirieri: list, lista_pierderi: list, nr_complexe: int) -> int:
-    suma_v = venit_vanzari(lista_vanzari)
-    suma_i = venit_inchirieri(lista_inchirieri)
-    suma_p = pierderi_administratie(lista_pierderi)
-    suma_curenta = suma_v + suma_i - suma_p - 1000000*nr_complexe
-    return suma_curenta
+def calcul_sumaCurentaInCont(lista_cont: list, lista_complexe: list) -> int:
+    suma_curenta = 0
+    for i in lista_cont:
+        suma_curenta += i.suma
+    return suma_curenta - len(lista_complexe)*1000000
 
 
 def minimApartamenteVandute(suma: int) -> None:  # principiu de calcul asemanator cu cel din problema cu pachete(starter, standart,...)
@@ -44,19 +50,19 @@ def minimApartamenteVandute(suma: int) -> None:  # principiu de calcul asemanato
           f" {minimG} Garsoniere \n {minimAp2} Apartamente cu 2 Camere\n {minimAp3} Apartamente cu 3 camere\n {minimPh} Penthouse-uri")
 
 
-def Vizualizare_Profit(lista_vanzari: list, lista_inchirieri: list, lista_pierderi: list, nr_complexe: int) -> None:
-    suma_curenta = calcul_sumaCurentaInCont(lista_vanzari, lista_inchirieri, lista_pierderi, nr_complexe)
-    if suma_curenta > nr_complexe*1000000:
+def Vizualizare_Profit(lista_cont: list, lista_complexe: list) -> None:
+    suma_curenta = calcul_sumaCurentaInCont(lista_cont, lista_complexe)
+    if suma_curenta > len(lista_complexe)*1000000:
         print(f"Ati ajuns deja pe profit!!!\n Aveti un profit de {suma_curenta-1000000} euro")
     else:
         print(f"Suma curenta din contul firmei este {suma_curenta}")
-        minimApartamenteVandute(nr_complexe*100000+1-suma_curenta)
+        minimApartamenteVandute(len(lista_complexe)*100000+1-suma_curenta)
 
 
-def Vizualizare_ComplexNou(lista_vanzari: list, lista_inchirieri: list, lista_pierderi: list, nr_complexe: int) -> None:
-    suma_curenta = calcul_sumaCurentaInCont(lista_vanzari, lista_inchirieri, lista_pierderi, nr_complexe)
-    if suma_curenta > 1000000*(nr_complexe+1):
+def Vizualizare_ComplexNou(lista_cont: list, lista_complexe: list) -> None:
+    suma_curenta = calcul_sumaCurentaInCont(lista_cont, lista_complexe)
+    if suma_curenta > 1000000*(len(lista_complexe)+1):
         print("Aveti deja suma necesara pentru a putea construi un complex nou! ")
     else:
         print(f"Suma curenta este de {suma_curenta}!")
-        minimApartamenteVandute(1000000*(nr_complexe+1)-suma_curenta)
+        minimApartamenteVandute(1000000*(len(lista_complexe)+1)-suma_curenta)
